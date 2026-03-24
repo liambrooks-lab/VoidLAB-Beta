@@ -1,0 +1,188 @@
+/* Base App Container */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: #020617;
+  color: #e2e8f0;
+}
+
+/* ================= Top Bar ================= */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 1.5rem;
+  background-color: #0f172a; 
+  border-bottom: 1px solid #1e293b; 
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-logo {
+  height: 28px;
+  width: auto;
+  border-radius: 4px;
+}
+
+.brand-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  /* Neon Gradient for VoidLAB Beta */
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Controls */
+.lang-select {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  background-color: #1e293b;
+  color: #f8fafc;
+  border: 1px solid #334155;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.lang-select:hover, .lang-select:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+.run-btn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  background-color: #0ea5e9;
+  color: white;
+  border: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.run-btn:hover {
+  background-color: #0284c7;
+}
+
+.run-btn:active {
+  transform: scale(0.97);
+}
+
+/* ================= Main Layout ================= */
+.main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Editor Area */
+.editor-area {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Resizer */
+.resize-bar {
+  width: 6px;
+  background-color: #1e293b;
+  cursor: col-resize;
+  transition: background-color 0.2s;
+  z-index: 5;
+}
+
+.resize-bar:hover, .resize-bar:active {
+  background-color: #38bdf8;
+}
+
+/* Output Area */
+.output-area {
+  height: 100%;
+  background-color: #020617;
+  border-left: 1px solid #1e293b;
+  padding: 1.2rem;
+  overflow-y: auto;
+}
+
+.output-area pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #a3e635; /* Terminal neon green */
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* ================= Terminal Loader ================= */
+.terminal-loader-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #a3e635; /* Matches the terminal green */
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(163, 230, 53, 0.2); /* Faded green track */
+  border-top-color: #a3e635; /* Bright green leading edge */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .main {
+    flex-direction: column;
+  }
+  
+  .editor-area {
+    width: 100% !important;
+    height: 60%;
+    border-bottom: 2px solid #1e293b;
+  }
+  
+  .output-area {
+    width: 100% !important;
+    height: 40%;
+    border-left: none;
+  }
+  
+  .brand-text {
+    display: none;
+  }
+}

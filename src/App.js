@@ -4,105 +4,64 @@ import Editor from "@monaco-editor/react";
 import { useState, useRef, useEffect } from "react";
 
 /* ================= Templates ================= */
-
 const templates = {
-  python: `a = 10
-b = 20
-print(a + b)`,
-
+  python: `a = 10\nb = 20\nprint(a + b)`,
   javascript: `console.log(10 + 20);`,
-
-  cpp: `#include <iostream>
-using namespace std;
-
-int main() {
-  cout << 10 + 20;
-  return 0;
-}`,
-
-  c: `#include <stdio.h>
-
-int main() {
-  printf("%d", 10 + 20);
-  return 0;
-}`,
-
-  java: `class Main {
-  public static void main(String[] args) {
-    System.out.println(10 + 20);
-  }
-}`
+  cpp: `#include <iostream>\nusing namespace std;\n\nint main() {\n  cout << 10 + 20;\n  return 0;\n}`,
+  c: `#include <stdio.h>\n\nint main() {\n  printf("%d", 10 + 20);\n  return 0;\n}`,
+  java: `public class Main {\n  public static void main(String[] args) {\n    System.out.println(10 + 20);\n  }\n}`
 };
 
 const STORAGE_KEY = "voidlab_beta_state";
 
 function App() {
-  let saved = null;
-  try {
-    saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-  } catch (e) {
-    console.error("Local storage error:", e);
-  }
-  
-  const isMobile = window.innerWidth <= 768;
+  const [saved, setSaved] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    } catch { return {}; }
+  });
 
+  const isMobile = window.innerWidth <= 768;
   const editorRef = useRef(null);
   const containerRef = useRef(null);
   const isDragging = useRef(false);
 
   /* ================= States ================= */
-
-  const [language, setLanguage] = useState(saved?.language || "python");
-
-  const [files, setFiles] = useState(
-    saved?.files || [{ id: 1, name: "main.py", code: templates.python }]
-  );
-
+  const [language, setLanguage] = useState(saved.language || "python");
+  const [editorWidth, setEditorWidth] = useState(saved.editorWidth || 65);
+  
+  // Implemented robust cache to save code per language
+  const [codeCache, setCodeCache] = useState(saved.codeCache || templates);
   const [output, setOutput] = useState("// Ready");
   const [isRunning, setIsRunning] = useState(false);
-  const [editorWidth, setEditorWidth] = useState(saved?.editorWidth || 65);
-
-  const activeFile = files[0];
 
   /* ================= Persist ================= */
-
   useEffect(() => {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ language, files, editorWidth })
-    );
-  }, [language, files, editorWidth]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ language, codeCache, editorWidth }));
+  }, [language, codeCache, editorWidth]);
 
-  /* ================= Run ================= */
-
+  /* ================= Execution ================= */
   const runCode = async () => {
-    if (!activeFile.code.trim()) {
+    const currentCode = codeCache[language] || "";
+    
+    if (!currentCode.trim()) {
       setOutput("⚠ Write some code first");
       return;
     }
 
     setIsRunning(true);
-
     try {
-      const langMap = {
-        python: "python3",
-        javascript: "javascript",
-        cpp: "cpp",
-        c: "c",
-        java: "java"
-      };
+      const langMap = { python: "python3", javascript: "javascript", cpp: "cpp", c: "c", java: "java" };
 
+      // Using the public Piston API to ensure the live GitHub Pages link works flawlessly.
+      // (Can be swapped to "http://localhost:5000/run" if local backend is preferred)
       const res = await fetch("https://emkc.org/api/v2/piston/execute", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           language: langMap[language],
           version: "*",
-          files: [
-            { content: activeFile.code }
-          ]
+          files: [{ content: currentCode }]
         })
       });
 
@@ -112,65 +71,36 @@ function App() {
       if (data.run?.stdout) result += data.run.stdout;
       if (data.run?.stderr) result += "\n❌ Error:\n" + data.run.stderr;
 
-      if (!result) result = "⚠ No output";
-
-      setOutput(result);
+      setOutput(result || "⚠ No output generated.");
     } catch {
-      setOutput("❌ Server error");
+      setOutput("❌ Execution server unreachable. Please try again later.");
     }
-
     setIsRunning(false);
   };
 
-  /* ================= Language ================= */
-
+  /* ================= Handlers ================= */
   const changeLanguage = (lang) => {
-    const ext = {
-      python: "py",
-      javascript: "js",
-      cpp: "cpp",
-      c: "c",
-      java: "java"
-    };
-
     setLanguage(lang);
-    setFiles([{
-      id: 1,
-      name: `main.${ext[lang]}`,
-      code: templates[lang]
-    }]);
-
     setOutput("// Ready");
   };
 
   const updateCode = (value) => {
-    setFiles([{ ...activeFile, code: value }]);
+    setCodeCache(prev => ({ ...prev, [language]: value || "" }));
   };
 
-  /* ================= Resize ================= */
-
-  const onMouseDown = () => {
-    if (isMobile) return;
-    isDragging.current = true;
-  };
-
+  /* ================= Resize Logic ================= */
+  const onMouseDown = () => { if (!isMobile) isDragging.current = true; };
   const onMouseMove = (e) => {
     if (isMobile || !isDragging.current || !containerRef.current) return;
-
     const rect = containerRef.current.getBoundingClientRect();
     const w = ((e.clientX - rect.left) / rect.width) * 100;
-
-    if (w > 30 && w < 80) setEditorWidth(w);
+    if (w > 25 && w < 80) setEditorWidth(w);
   };
-
   const onMouseUp = () => (isDragging.current = false);
 
-  /* ================= UI ================= */
-
+  /* ================= Render UI ================= */
   return (
     <div className="app" onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}>
-
-      {/* ===== Top Bar ===== */}
       <div className="topbar">
         <div className="brand">
           <img src={logo} alt="logo" className="brand-logo" />
@@ -178,11 +108,7 @@ function App() {
         </div>
 
         <div className="topbar-right">
-          <select
-            className="lang-select"
-            value={language}
-            onChange={(e) => changeLanguage(e.target.value)}
-          >
+          <select className="lang-select" value={language} onChange={(e) => changeLanguage(e.target.value)}>
             <option value="python">Python</option>
             <option value="javascript">JavaScript</option>
             <option value="cpp">C++</option>
@@ -191,74 +117,32 @@ function App() {
           </select>
 
           {!isMobile && (
-            <button className="run-btn" onClick={runCode}>
+            <button className="run-btn" onClick={runCode} disabled={isRunning}>
               {isRunning ? "Running..." : "Run"}
             </button>
           )}
         </div>
       </div>
 
-      {/* ===== Main ===== */}
       <div className="main" ref={containerRef}>
-
-        <div 
-          className="editor-area" 
-          style={!isMobile ? { width: `${editorWidth}%` } : {}}
-        >
+        <div className="editor-area" style={!isMobile ? { width: `${editorWidth}%` } : {}}>
           <Editor
             height="100%"
             language={language}
             theme="vs-dark"
-            value={activeFile.code}
+            value={codeCache[language]}
             onChange={updateCode}
             onMount={(editor) => {
               editorRef.current = editor;
-
-              /* Enable native context menu */
               editor.updateOptions({ contextmenu: true });
-
-              /* Add clipboard actions */
-              editor.addAction({
-                id: "cut",
-                label: "Cut",
-                run: () => editor.trigger("keyboard", "editor.action.clipboardCutAction")
-              });
-
-              editor.addAction({
-                id: "copy",
-                label: "Copy",
-                run: () => editor.trigger("keyboard", "editor.action.clipboardCopyAction")
-              });
-
-              editor.addAction({
-                id: "paste",
-                label: "Paste",
-                run: () => editor.trigger("keyboard", "editor.action.clipboardPasteAction")
-              });
-
-              editor.addAction({
-                id: "selectAll",
-                label: "Select All",
-                run: () => editor.trigger("keyboard", "editor.action.selectAll")
-              });
             }}
-            options={{
-              fontSize: 14,
-              minimap: { enabled: false },
-              scrollBeyondLastLine: false,
-              contextmenu: true
-            }}
+            options={{ fontSize: 14, minimap: { enabled: false }, scrollBeyondLastLine: false }}
           />
         </div>
 
-        {!isMobile && (
-          <div className="resize-bar" onMouseDown={onMouseDown} />
-        )}
+        {!isMobile && <div className="resize-bar" onMouseDown={onMouseDown} />}
 
-        <div
-          className="output-area"
-          style={!isMobile ? { width: `${100 - editorWidth}%` } : {}}
-        >
+        <div className="output-area" style={!isMobile ? { width: `${100 - editorWidth}%` } : {}}>
           {isRunning ? (
             <div className="terminal-loader-container">
               <div className="spinner"></div>

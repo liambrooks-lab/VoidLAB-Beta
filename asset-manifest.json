@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/voidlab-beta/static/css/main.8cb34e67.css",
+    "main.js": "/voidlab-beta/static/js/main.f3865938.js",
+    "static/js/453.4a024ecc.chunk.js": "/voidlab-beta/static/js/453.4a024ecc.chunk.js",
+    "index.html": "/voidlab-beta/index.html",
+    "main.8cb34e67.css.map": "/voidlab-beta/static/css/main.8cb34e67.css.map",
+    "main.f3865938.js.map": "/voidlab-beta/static/js/main.f3865938.js.map",
+    "453.4a024ecc.chunk.js.map": "/voidlab-beta/static/js/453.4a024ecc.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8cb34e67.css",
+    "static/js/main.f3865938.js"
+  ]
+}

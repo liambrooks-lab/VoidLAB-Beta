@@ -2,6 +2,7 @@ import "./App.css";
 import logo from "./assets/logo.png";
 import Editor from "@monaco-editor/react";
 import { useState, useRef, useEffect } from "react";
+import Login from "./Login";
 
 /* ================= Templates ================= */
 const templates = {
@@ -13,12 +14,21 @@ const templates = {
 };
 
 const STORAGE_KEY = "voidlab_beta_state";
+const PROFILE_KEY = "voidlab_beta_profile";
 
 function App() {
   const [saved, setSaved] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
     } catch { return {}; }
+  });
+
+  const [profile, setProfile] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(PROFILE_KEY)) || null;
+    } catch {
+      return null;
+    }
   });
 
   const isMobile = window.innerWidth <= 768;
@@ -99,6 +109,18 @@ function App() {
   const onMouseUp = () => (isDragging.current = false);
 
   /* ================= Render UI ================= */
+  if (!profile) {
+    return (
+      <Login
+        brandImageSrc={logo}
+        onSubmit={(p) => {
+          setProfile(p);
+          localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
+        }}
+      />
+    );
+  }
+
   return (
     <div className="app" onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}>
       <div className="topbar">
@@ -108,6 +130,22 @@ function App() {
         </div>
 
         <div className="topbar-right">
+          <div className="user-pill" title={`${profile.name} • ${profile.region}`}>
+            <div className="user-pill-dot" aria-hidden="true" />
+            <span className="user-pill-name">{profile.name}</span>
+            <button
+              className="user-pill-btn"
+              onClick={() => {
+                localStorage.removeItem(PROFILE_KEY);
+                setProfile(null);
+              }}
+              type="button"
+              aria-label="Sign out"
+            >
+              Sign out
+            </button>
+          </div>
+
           <select className="lang-select" value={language} onChange={(e) => changeLanguage(e.target.value)}>
             <option value="python">Python</option>
             <option value="javascript">JavaScript</option>

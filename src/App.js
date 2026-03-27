@@ -61,7 +61,8 @@ function App() {
 
     setIsRunning(true);
     try {
-      const langMap = { python: "python3", javascript: "javascript", cpp: "cpp", c: "c", java: "java" };
+      // Piston language IDs (v2) commonly use "python" (not "python3")
+      const langMap = { python: "python", javascript: "javascript", cpp: "cpp", c: "c", java: "java" };
 
       // Using the public Piston API to ensure the live GitHub Pages link works flawlessly.
       // (Can be swapped to "http://localhost:5000/run" if local backend is preferred)
@@ -78,8 +79,24 @@ function App() {
       const data = await res.json();
       let result = "";
 
-      if (data.run?.stdout) result += data.run.stdout;
-      if (data.run?.stderr) result += "\n❌ Error:\n" + data.run.stderr;
+      if (!res.ok) {
+        const msg =
+          data?.message ||
+          data?.error ||
+          `Request failed (${res.status} ${res.statusText})`;
+        setOutput("❌ " + msg);
+        setIsRunning(false);
+        return;
+      }
+
+      if (data.compile?.stdout) result += data.compile.stdout;
+      if (data.compile?.stderr) result += (result ? "\n" : "") + "❌ Compile error:\n" + data.compile.stderr;
+
+      if (data.run?.stdout) result += (result ? "\n" : "") + data.run.stdout;
+      if (data.run?.stderr) result += (result ? "\n" : "") + "❌ Runtime error:\n" + data.run.stderr;
+
+      const genericError = data?.message || data?.error;
+      if (!result && genericError) result = "❌ " + genericError;
 
       setOutput(result || "⚠ No output generated.");
     } catch {

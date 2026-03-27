@@ -64,9 +64,8 @@ function App() {
       // Piston language IDs (v2) commonly use "python" (not "python3")
       const langMap = { python: "python", javascript: "javascript", cpp: "cpp", c: "c", java: "java" };
 
-      // Using the public Piston API to ensure the live GitHub Pages link works flawlessly.
-      // (Can be swapped to "http://localhost:5000/run" if local backend is preferred)
-      const res = await fetch("https://emkc.org/api/v2/piston/execute", {
+      // Use local VoidLAB backend (see backend/server.py)
+      const res = await fetch("http://localhost:5000/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -83,24 +82,25 @@ function App() {
         const msg =
           data?.message ||
           data?.error ||
-          `Request failed (${res.status} ${res.statusText})`;
+          `Backend request failed (${res.status} ${res.statusText}).`;
         setOutput("❌ " + msg);
         setIsRunning(false);
         return;
       }
 
-      if (data.compile?.stdout) result += data.compile.stdout;
-      if (data.compile?.stderr) result += (result ? "\n" : "") + "❌ Compile error:\n" + data.compile.stderr;
-
-      if (data.run?.stdout) result += (result ? "\n" : "") + data.run.stdout;
-      if (data.run?.stderr) result += (result ? "\n" : "") + "❌ Runtime error:\n" + data.run.stderr;
+      // Expecting { stdout, stderr } from local backend
+      if (data.stdout) result += data.stdout;
+      if (data.stderr) result += (result ? "\n" : "") + "❌ Error:\n" + data.stderr;
 
       const genericError = data?.message || data?.error;
       if (!result && genericError) result = "❌ " + genericError;
 
       setOutput(result || "⚠ No output generated.");
     } catch {
-      setOutput("❌ Execution server unreachable. Please try again later.");
+      setOutput(
+        "❌ Execution backend unreachable.\n" +
+        "Make sure your local VoidLAB backend is running (python backend/server.py)."
+      );
     }
     setIsRunning(false);
   };

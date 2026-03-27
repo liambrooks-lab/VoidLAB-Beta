@@ -5,7 +5,7 @@
   <p>
     <strong>Author:</strong> Rudranarayan Jena | <strong>Version:</strong> 0.1.0-beta
   </p>
-  <a href="https://liambrooks-lab.github.io/voidlab-beta"><strong>🔴 Launch VoidLAB-Beta</strong></a>
+  <a href="https://liambrooks-lab.github.io/VoidLAB-Beta"><strong>🔴 Launch VoidLAB-Beta</strong></a>
 </div>
 
 ---

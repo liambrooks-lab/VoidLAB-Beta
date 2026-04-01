@@ -61,17 +61,16 @@ function App() {
 
     setIsRunning(true);
     try {
-      // Piston language IDs (v2) commonly use "python" (not "python3")
       const langMap = { python: "python", javascript: "javascript", cpp: "cpp", c: "c", java: "java" };
 
       // Use local VoidLAB backend (see backend/server.py)
       const res = await fetch("http://localhost:5000/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        // FIX: Match the exact JSON structure backend/server.py expects
         body: JSON.stringify({
           language: langMap[language],
-          version: "*",
-          files: [{ content: currentCode }]
+          code: currentCode
         })
       });
 
@@ -79,21 +78,15 @@ function App() {
       let result = "";
 
       if (!res.ok) {
-        const msg =
-          data?.message ||
-          data?.error ||
-          `Backend request failed (${res.status} ${res.statusText}).`;
+        const msg = data?.error || data?.message || `Backend request failed (${res.status} ${res.statusText}).`;
         setOutput("❌ " + msg);
         setIsRunning(false);
         return;
       }
 
-      // Expecting { stdout, stderr } from local backend
-      if (data.stdout) result += data.stdout;
-      if (data.stderr) result += (result ? "\n" : "") + "❌ Error:\n" + data.stderr;
-
-      const genericError = data?.message || data?.error;
-      if (!result && genericError) result = "❌ " + genericError;
+      // FIX: Match the "output" and "error" keys returned from backend/server.py
+      if (data.output) result += data.output;
+      if (data.error) result += (result ? "\n" : "") + "❌ Error:\n" + data.error;
 
       setOutput(result || "⚠ No output generated.");
     } catch {
@@ -126,7 +119,9 @@ function App() {
   const onMouseUp = () => (isDragging.current = false);
 
   /* ================= Render UI ================= */
-  if (!profile) {
+  
+  // FIX: Stricter profile check to ensure corrupted/empty local storage doesn't bypass login
+  if (!profile || !profile.name) {
     return (
       <Login
         brandImageSrc={logo}

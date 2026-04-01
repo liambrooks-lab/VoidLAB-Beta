@@ -193,8 +193,29 @@
   color: rgba(226, 232, 240, 0.65);
 }
 
+/* Updated file input styling */
 .input.file {
-  padding: 0.58rem 0.7rem;
+  padding: 0.45rem 0.7rem;
+  color: rgba(226, 232, 240, 0.65);
+  cursor: pointer;
+}
+
+.input.file::file-selector-button {
+  margin-right: 12px;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+
+.input.file::file-selector-button:hover {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: rgba(56, 189, 248, 0.5);
 }
 
 .login-btn {
@@ -245,4 +266,3 @@
     justify-self: start;
   }
 }
-

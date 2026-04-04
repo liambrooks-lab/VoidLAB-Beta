@@ -12,7 +12,7 @@ VoidLAB Beta is a browser-based coding workspace built with React, Monaco Editor
 - Responsive mobile layout with editor/output switching
 - Login screen with a custom-styled profile upload control
 
-  # Preview VoidLAB-Beta 
+# Preview VoidLAB-Beta 
 
 ### [🔗 Launch Live Product](https://void-lab-beta.vercel.app/)
 

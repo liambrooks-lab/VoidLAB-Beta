@@ -21,3 +21,13 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+desktop.ini
+/asset-manifest.json
+/favicon.png
+/index.html
+/logo192.png
+/logo512.png
+/manifest.json
+/robots.txt
+/static
+/sw.js

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import "./Login.css";
 
 const REGIONS = [
@@ -14,16 +14,12 @@ const REGIONS = [
 ];
 
 export default function Login({ brandImageSrc, onSubmit }) {
-  const [dpFile, setDpFile] = useState(null);
+  const [avatarDataUrl, setAvatarDataUrl] = useState("");
+  const [selectedFileName, setSelectedFileName] = useState("Upload PNG or JPG");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [region, setRegion] = useState(REGIONS[0]);
-
-  const dpPreviewUrl = useMemo(() => {
-    if (!dpFile) return "";
-    return URL.createObjectURL(dpFile);
-  }, [dpFile]);
 
   const canSubmit =
     name.trim().length >= 2 &&
@@ -31,12 +27,33 @@ export default function Login({ brandImageSrc, onSubmit }) {
     phone.trim().length >= 7 &&
     region;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!canSubmit) return;
+  const handleFileChange = (event) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      setAvatarDataUrl("");
+      setSelectedFileName("Upload PNG or JPG");
+      return;
+    }
+
+    setSelectedFileName(file.name);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setAvatarDataUrl(typeof reader.result === "string" ? reader.result : "");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (!canSubmit) {
+      return;
+    }
 
     onSubmit({
-      dpPreviewUrl,
+      avatarDataUrl,
       name: name.trim(),
       email: email.trim(),
       phone: phone.trim(),
@@ -62,10 +79,10 @@ export default function Login({ brandImageSrc, onSubmit }) {
             <div className="login-title">
               VoidLAB <span className="login-beta">Beta</span>
             </div>
-            <div className="login-subtitle">Cloud editor and compiler</div>
+            <div className="login-subtitle">Cloud editor, compiler, and preview lab</div>
             <div className="login-info">
-              Sign in to sync your workspace, keep your code cache, and run
-              snippets instantly.
+              Sign in to keep your workspace, open instant previews for HTML, CSS, and SQL,
+              and continue from any device.
             </div>
           </div>
         </div>
@@ -74,27 +91,35 @@ export default function Login({ brandImageSrc, onSubmit }) {
           <div className="login-card-top">
             <div className="login-card-title">Sign in</div>
             <div className="login-card-muted">
-              Add your details to continue.
+              Add your details to continue into your workspace.
             </div>
           </div>
 
           <form className="login-form" onSubmit={handleSubmit}>
             <label className="field">
-              <span className="field-label">DP</span>
+              <span className="field-label">Profile photo</span>
               <div className="dp-row">
                 <div className="dp-preview" aria-hidden="true">
-                  {dpPreviewUrl ? (
-                    <img src={dpPreviewUrl} alt="" />
+                  {avatarDataUrl ? (
+                    <img src={avatarDataUrl} alt="" />
                   ) : (
-                    <div className="dp-placeholder">+</div>
+                    <div className="dp-placeholder">VL</div>
                   )}
                 </div>
-                <input
-                  className="input file"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setDpFile(e.target.files?.[0] || null)}
-                />
+
+                <div className="file-picker-wrap">
+                  <input
+                    id="voidlab-avatar-upload"
+                    className="file-input-hidden"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                  />
+                  <label className="file-picker" htmlFor="voidlab-avatar-upload">
+                    <span className="file-picker-button">Choose Photo</span>
+                    <span className="file-picker-name">{selectedFileName}</span>
+                  </label>
+                </div>
               </div>
             </label>
 
@@ -103,7 +128,7 @@ export default function Login({ brandImageSrc, onSubmit }) {
               <input
                 className="input"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(event) => setName(event.target.value)}
                 placeholder="Your name"
                 autoComplete="name"
               />
@@ -114,7 +139,7 @@ export default function Login({ brandImageSrc, onSubmit }) {
               <input
                 className="input"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@domain.com"
                 autoComplete="email"
                 inputMode="email"
@@ -126,7 +151,7 @@ export default function Login({ brandImageSrc, onSubmit }) {
               <input
                 className="input"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(event) => setPhone(event.target.value)}
                 placeholder="+1 555 0100"
                 autoComplete="tel"
                 inputMode="tel"
@@ -138,11 +163,11 @@ export default function Login({ brandImageSrc, onSubmit }) {
               <select
                 className="input select"
                 value={region}
-                onChange={(e) => setRegion(e.target.value)}
+                onChange={(event) => setRegion(event.target.value)}
               >
-                {REGIONS.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
+                {REGIONS.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
                   </option>
                 ))}
               </select>
@@ -153,7 +178,7 @@ export default function Login({ brandImageSrc, onSubmit }) {
             </button>
 
             <div className="login-footnote">
-              This is a beta experience — expect rapid improvements.
+              Beta build. Preview workflows and mobile layouts are now included.
             </div>
           </form>
         </div>
@@ -161,4 +186,3 @@ export default function Login({ brandImageSrc, onSubmit }) {
     </div>
   );
 }
-

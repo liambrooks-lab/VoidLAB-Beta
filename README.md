@@ -77,7 +77,6 @@ C, C++, and Java still depend on compiler toolchains being available on the back
 
 **Rudranarayan Jena** 
 - **GitHub:** [@liambrooks-lab](https://github.com/liambrooks-lab)  
-- **Project:** [LEXIO](https://github.com/liambrooks-lab/LEXIO)  
-- **Live Demo:** [View Live Demo](https://liambrooks-lab.github.io/LEXIO/)
+
 ---
                                                 Thank You

@@ -72,3 +72,12 @@ For the smoothest free deployment:
 HTML, CSS, SQL, Python, and browser JavaScript work well in the hosted setup.
 
 C, C++, and Java still depend on compiler toolchains being available on the backend machine. They work locally when those tools are installed. For hosted production use, they are best run on a custom container image with the required compilers.
+---
+## 👨‍💻 Author
+
+**Rudranarayan Jena** 
+- **GitHub:** [@liambrooks-lab](https://github.com/liambrooks-lab)  
+- **Project:** [LEXIO](https://github.com/liambrooks-lab/LEXIO)  
+- **Live Demo:** [View Live Demo](https://liambrooks-lab.github.io/LEXIO/)
+---
+                                                Thank You

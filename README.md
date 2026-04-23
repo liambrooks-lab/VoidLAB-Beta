@@ -15,9 +15,8 @@
 <p align="center">
   <a href="https://github.com/liambrooks-lab/VoidLAB-Beta">Repository</a>
   |
-  <a href="http://localhost:3000">Local Frontend</a>
-  |
-  <a href="http://localhost:5000/health">Local Backend Health</a>
+  <a href="https://void-lab-beta.vercel.app/">Product/a>
+  
 </p>
 
 ---
@@ -25,12 +24,10 @@
 ## Links
 
 - **Repository**: [https://github.com/liambrooks-lab/VoidLAB-Beta](https://github.com/liambrooks-lab/VoidLAB-Beta)
-- **Live Demo**: Not publicly deployed yet for this beta build
-- **Local Frontend**: [http://localhost:3000](http://localhost:3000)
-- **Local Backend Health**: [http://localhost:5000/health](http://localhost:5000/health)
-- **Backend Run Endpoint**: `POST http://localhost:5000/run`
 
-> When the project is deployed, replace the Live Demo line with the Vercel/GitHub Pages URL and add the Render backend URL here.
+- **Live Demo**: [https://void-lab-beta.vercel.app/](Try VoidLAB-Beta Live)
+
+
 
 ## Overview
 

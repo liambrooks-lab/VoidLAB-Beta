@@ -15,7 +15,7 @@
 <p align="center">
   <a href="https://github.com/liambrooks-lab/VoidLAB-Beta">Repository</a>
   |
-  <a href="https://void-lab-beta.vercel.app/">Product/a>
+  <a href="https://void-lab-beta.vercel.app/">Product</a>
   
 </p>
 
@@ -23,9 +23,9 @@
 
 ## Links
 
-- **Repository**: [https://github.com/liambrooks-lab/VoidLAB-Beta](https://github.com/liambrooks-lab/VoidLAB-Beta)
+- **Repository**: <a href="https://github.com/liambrooks-lab/VoidLAB-Beta.git">View Repository</a>
 
-- **Live Demo**: [https://void-lab-beta.vercel.app/](Try VoidLAB-Beta Live)
+- **Live Demo**: <a href="https://void-lab-beta.vercel.app/">View VoidLAB Beta Live</a>
 
 
 

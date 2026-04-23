@@ -5,52 +5,178 @@
 <h1 align="center">VoidLAB Beta</h1>
 
 <p align="center">
-  A clean browser workspace for writing code, running snippets, and previewing web pages from one place.
+  A beta cloud editor and compiler for writing code, running snippets, previewing web pages, and testing SQL from one browser workspace.
 </p>
 
 <p align="center">
-  <strong>React</strong> | <strong>Monaco Editor</strong> | <strong>Flask</strong> | <strong>SQL Demo Engine</strong>
+  <strong>React</strong> | <strong>Monaco Editor</strong> | <strong>Flask</strong> | <strong>SQLite Demo Engine</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/liambrooks-lab/VoidLAB-Beta">Repository</a>
+  |
+  <a href="http://localhost:3000">Local Frontend</a>
+  |
+  <a href="http://localhost:5000/health">Local Backend Health</a>
 </p>
 
 ---
 
+## Links
+
+- **Repository**: [https://github.com/liambrooks-lab/VoidLAB-Beta](https://github.com/liambrooks-lab/VoidLAB-Beta)
+- **Live Demo**: Not publicly deployed yet for this beta build
+- **Local Frontend**: [http://localhost:3000](http://localhost:3000)
+- **Local Backend Health**: [http://localhost:5000/health](http://localhost:5000/health)
+- **Backend Run Endpoint**: `POST http://localhost:5000/run`
+
+> When the project is deployed, replace the Live Demo line with the Vercel/GitHub Pages URL and add the Render backend URL here.
+
 ## Overview
 
-VoidLAB Beta is a beta-stage cloud editor and compiler built for quick coding experiments, learning, and lightweight web previews. It combines a Monaco-powered code editor, language switching, saved local workspace state, browser-based JavaScript execution, backend execution for compiled/interpreted languages, and instant HTML/CSS previewing.
+VoidLAB Beta is a lightweight browser-based coding workspace. It gives users a clean editor, quick language switching, instant web previews, saved local code state, and backend-powered execution for multiple languages.
 
-This is intentionally a smaller beta product, so the focus is on a simple and polished core workflow:
+The goal of this beta is not to be a full production IDE yet. It is a focused product build for demos, learning, portfolio presentation, and quick coding experiments.
 
-- sign in with a local profile
-- choose a language
-- write or edit code
-- run it or preview it
-- keep working from the same browser workspace
+## Applications
 
-## Current Features
+VoidLAB Beta can be used as:
 
-- Monaco editor with saved code per language
-- Browser execution for JavaScript
-- Backend execution for Python, C, C++, Java, and SQL
-- Live preview for HTML and CSS inside the app
-- "Open Preview" support in a new tab for HTML, CSS, and SQL
-- Responsive mobile layout with editor/output switching
-- Login screen with a custom-styled profile upload control
+- an online compiler for beginner-friendly code practice
+- a browser code playground for quick snippets
+- a frontend preview lab for HTML and CSS experiments
+- a SQL learning sandbox with demo tables
+- a portfolio project that shows full-stack product thinking
+- a base for a larger cloud IDE or coding platform
 
-## Local development
+## Core Features
+
+- Monaco-powered code editor
+- saved code per language using browser storage
+- local profile onboarding with avatar upload
+- JavaScript execution directly in the browser
+- Flask backend execution for Python, JavaScript, C, C++, Java, and SQL
+- HTML/CSS live preview inside the app
+- separate preview window for HTML, CSS, and SQL
+- mobile-friendly editor/output switching
+- SQL demo database with sample users, projects, and tasks
+
+## Working Workflow
+
+1. The user opens VoidLAB Beta.
+2. The sign-in screen collects a local profile, region, and optional photo.
+3. The workspace opens with the editor, output panel, language selector, and run controls.
+4. The user selects a language such as Python, JavaScript, HTML, CSS, Java, C++, C, or SQL.
+5. Code is written in the Monaco editor and saved locally per language.
+6. Clicking `Run` executes the current code:
+   - JavaScript can run directly in the browser.
+   - Python, C, C++, Java, and SQL are sent to the Flask backend.
+   - HTML and CSS refresh the built-in preview.
+7. Output, errors, SQL results, or rendered previews appear in the right-side panel.
+8. For HTML, CSS, and SQL, the user can also open a dedicated preview tab.
+
+## Preview
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="docs/readme/voidlab-login.png" alt="VoidLAB Beta sign in screen" />
+      <br />
+      <strong>1. Profile entry</strong>
+      <br />
+      A clean beta sign-in flow with local profile details and photo upload.
+    </td>
+    <td width="50%" valign="top">
+      <img src="docs/readme/voidlab-workspace.png" alt="VoidLAB Beta workspace" />
+      <br />
+      <strong>2. Editor workspace</strong>
+      <br />
+      Language switching, Monaco editing, console output, and live preview in one workspace.
+    </td>
+  </tr>
+</table>
+
+## How It Works
+
+### Frontend
+
+The React app handles the product interface:
+
+- sign-in/profile screen
+- editor and language switching
+- saved local workspace state
+- browser JavaScript execution
+- HTML/CSS preview rendering
+- output and SQL result presentation
+- communication with the backend API
+
+### Backend
+
+The Flask backend handles execution that needs a server runtime:
+
+- receives language and code through `/run`
+- runs Python through the current Python interpreter
+- runs JavaScript through Node.js when available
+- compiles and runs C/C++ when GCC/G++ are installed
+- compiles and runs Java when Java tools are installed
+- runs SQL against an in-memory SQLite demo database
+- returns output, errors, and SQL result data to the frontend
+
+## Language Support
+
+### Runnable / executable
+
+- Python
+- JavaScript
+- C
+- C++
+- Java
+- SQL
+
+### Preview focused
+
+- HTML
+- CSS
+
+## SQL Demo Data
+
+SQL mode includes a small in-memory demo database:
+
+- `users(id, name, region, active)`
+- `projects(id, name, owner_id, status, budget)`
+- `tasks(id, project_id, title, priority, done)`
+
+Example query:
+
+```sql
+SELECT
+  p.name AS project_name,
+  u.name AS owner_name,
+  p.status,
+  COUNT(t.id) AS total_tasks
+FROM projects p
+JOIN users u ON u.id = p.owner_id
+LEFT JOIN tasks t ON t.project_id = p.id
+GROUP BY p.id, u.name
+ORDER BY p.name;
+```
+
+## Tech Stack
 
 ### Frontend
 
 - React 18
 - Monaco Editor
-- Plain CSS files for custom UI styling
-- LocalStorage for beta workspace/profile persistence
+- Plain CSS
+- LocalStorage
 
 ### Backend
 
 - Python
 - Flask
-- SQLite-backed demo SQL execution
-- Local compiler/runtime execution where available
+- Flask-CORS
+- SQLite
+- Local compiler/runtime tools where available
 
 ## Project Structure
 
@@ -76,25 +202,36 @@ VoidLAB-Beta/
 
 ## Local Setup
 
-### 1. Install frontend dependencies
+### Prerequisites
+
+- Node.js 18+
+- npm
+- Python 3.10+
+- Optional runtime tools for full language support:
+  - Node.js for backend JavaScript execution
+  - GCC for C
+  - G++ for C++
+  - JDK for Java
+
+### Install frontend dependencies
 
 ```bash
 npm install
 ```
 
-### 2. Start the React app
+### Start the frontend
 
 ```bash
 npm start
 ```
 
-The frontend runs at:
+Frontend URL:
 
 ```text
 http://localhost:3000
 ```
 
-### 3. Start the backend
+### Start the backend
 
 Open another terminal:
 
@@ -104,21 +241,27 @@ pip install -r requirements.txt
 python server.py
 ```
 
-The frontend expects the backend at:
+Backend URL:
 
 ```text
 http://localhost:5000
+```
+
+Health check:
+
+```text
+http://localhost:5000/health
 ```
 
 ## Environment Variables
 
 ### Frontend
 
-Create a frontend environment variable when the backend is hosted somewhere else:
-
 ```env
-REACT_APP_API_BASE_URL=https://your-backend-url.example.com
+REACT_APP_API_BASE_URL=http://localhost:5000
 ```
+
+For hosted deployment, set this to the deployed backend URL.
 
 ### Backend
 
@@ -127,25 +270,55 @@ PORT=5000
 ALLOWED_ORIGINS=http://localhost:3000
 ```
 
-For deployment, set `ALLOWED_ORIGINS` to the hosted frontend URL.
+For hosted deployment, set `ALLOWED_ORIGINS` to the deployed frontend URL.
 
-## SQL Demo Data
+## Deployment Plan
 
-SQL mode runs against a small in-memory demo database with these tables:
+A simple beta deployment path:
 
-- `users(id, name, region, active)`
-- `projects(id, name, owner_id, status, budget)`
-- `tasks(id, project_id, title, priority, done)`
+- deploy the React frontend on Vercel, Netlify, or GitHub Pages
+- deploy the Flask backend on Render, Railway, or a custom server
+- set `REACT_APP_API_BASE_URL` in the frontend host
+- set `ALLOWED_ORIGINS` in the backend host
 
-## Deployment Notes
+HTML, CSS, SQL, Python, and browser JavaScript are the smoothest hosted paths. C, C++, and Java depend on compiler toolchains being installed on the backend machine, so hosted production support for those languages is best handled with a custom container image.
 
-A simple free deployment flow is:
+## Current Beta Scope
 
-- host the React frontend on Vercel
-- host the Flask backend on Render
-- set `REACT_APP_API_BASE_URL` in the frontend project
-- set `ALLOWED_ORIGINS` in the backend project
+VoidLAB Beta is ready for demos, experiments, learning workflows, and portfolio presentation. It is still a beta product, so future improvements can include:
 
-HTML, CSS, SQL, Python, and browser JavaScript work well in the hosted setup.
+- public hosted demo
+- stronger authentication
+- cloud project saving
+- file import/export
+- better execution sandboxing
+- richer terminal-style output
+- more project and workspace tools
 
-C, C++, and Java still depend on compiler toolchains being available on the backend machine. They work locally when those tools are installed. For hosted production use, they are best run on a custom container image with the required compilers.
+## License
+
+VoidLAB Beta is protected under a custom restricted license.
+
+Copyright (c) 2026 Rudranarayan Jena.
+
+This project is not released as an open-source project under MIT, Apache, GPL, or any other permissive/public license. Copying, modification, distribution, hosting, reuse, or derivative work requires prior written permission from the author.
+
+See [LICENSE](LICENSE) for the full license text.
+
+## Author
+
+<p align="center">
+  <img src="docs/readme/author-rudranarayan-jena.jpg" alt="Rudranarayan Jena" width="180" />
+</p>
+
+<p align="center">
+  <strong>Crafted by MR. Rudranarayan Jena</strong>
+</p>
+
+<p align="center">
+  Product Builder | Full-stack Developer | Creator of VoidLAB Beta
+</p>
+
+<p align="center">
+  <a href="https://github.com/liambrooks-lab">GitHub: @liambrooks-lab</a>
+</p>

@@ -2,7 +2,7 @@
   <img src="src/assets/logo.png" alt="VoidLAB Beta logo" width="280" />
 </p>
 
-<h1 align="center">VoidLAB Beta</h1>
+<h1 align="center">VoidLAB-Beta</h1>
 
 <p align="center">
   A beta cloud editor and compiler for writing code, running snippets, previewing web pages, and testing SQL from one browser workspace.
@@ -12,18 +12,9 @@
   <strong>React</strong> | <strong>Monaco Editor</strong> | <strong>Flask</strong> | <strong>SQLite Demo Engine</strong>
 </p>
 
-<p align="center">
-  <a href="https://github.com/liambrooks-lab/VoidLAB-Beta">Repository</a>
-  |
-  <a href="https://void-lab-beta.vercel.app/">Product</a>
-  
-</p>
-
 ---
 
 ## Links
-
-- **Repository**: <a href="https://github.com/liambrooks-lab/VoidLAB-Beta.git">View Repository</a>
 
 - **Live Demo**: <a href="https://void-lab-beta.vercel.app/">View VoidLAB Beta Live</a>
 
@@ -302,20 +293,16 @@ This project is not released as an open-source project under MIT, Apache, GPL, o
 
 See [LICENSE](LICENSE) for the full license text.
 
-## Author
+---
 
-<p align="center">
-  <img src="docs/readme/author-rudranarayan-jena.jpg" alt="Rudranarayan Jena" width="180" />
-</p>
+<br>
+<div align="right">
+  <b>Rudranarayan Jena</b><br>
+  <i>Founder @ Voxion Labs</i>
+</div>
 
-<p align="center">
-  <strong>Crafted by MR. Rudranarayan Jena</strong>
-</p>
+---
+<div align="center">
+  (c) 2026 Rudranarayan Jena
+</div>
 
-<p align="center">
-  Product Builder | Full-stack Developer | Creator of VoidLAB Beta
-</p>
-
-<p align="center">
-  <a href="https://github.com/liambrooks-lab">GitHub: @liambrooks-lab</a>
-</p>
